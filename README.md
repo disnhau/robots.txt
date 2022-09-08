@@ -3,10 +3,12 @@
 # usage
 
 ## options
+```
 -o/--output /path/to/output.txt, default ./output.txt
 -t/--timeout request timeout in seconds, default 3 seconds
 -u/--url url to get
 -h/--help show help
+```
 
 **url can be https:// or without https://**
 
