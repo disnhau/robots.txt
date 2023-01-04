@@ -1,5 +1,5 @@
 #!/bin/bash
-#author: @quydox
+#author: @disnhau
 
 function help() {
 	echo "-o/--output out put file | default ./output.txt"
@@ -16,10 +16,11 @@ function getRobots() {
 	url="$1"
 	[ -z "$(echo "$url" | grep '^http')" ] && url="https://$url"
 	[ -z "$(echo "$url" | grep '/$')" ] && url="$url"
+    url=$(echo "$url" | sed 's@/$@@')
 	orgUrl="$url"
 	url="${url}/robots.txt"
 
-	curl 2>/dev/null -k --max-time $TIMEOUT -L $url | grep -E "^(Disallow|Allow):" | cut -d" " -f2 | sed "s@^@$orgUrl@" | tee -a $OUTPUT
+	curl 2>/dev/null -k --max-time $TIMEOUT -L $url | grep -E "^(Disallow|Allow):" | cut -d" " -f2 | grep -vE "^(Disallow|Allow)" | sed "s@^@$orgUrl@" | tee -a $OUTPUT
 }
 
 OUTPUT="output.txt"
@@ -68,7 +69,8 @@ set -- "${POSITIONAL[@]}"
 urls=($(echo "$url" | tr ' ' '\n'))
 
 for j in ${urls[@]}; do
-	getRobots $j #& # uncomment # before & to run in background
+	getRobots $j & # uncomment # before & to run in background
+    sleep 1
 done;
 
 exit 0
